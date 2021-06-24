@@ -26,8 +26,10 @@ private:
 public:
     QuadTree();
     void insert(Point new_point) override;
+    bool inbound(Rectangle region, Point p);
     std::shared_ptr<Node> search(Point target) override;
     std::vector<Point> range(Rectangle region) override;
+    std::vector<Point> range(Rectangle region, std::vector<Point> result, std::shared_ptr<Node>& node);
     Point nearest_neighbor(Point reference_point) override;
 };
 

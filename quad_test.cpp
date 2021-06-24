@@ -4,6 +4,7 @@
 #include "Point.h"
 #include "Rectangle.h"
 #include "QuadTree.h"
+#include <array>
 
 using namespace utec::spatial;
 
