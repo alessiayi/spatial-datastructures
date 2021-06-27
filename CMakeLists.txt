@@ -3,7 +3,7 @@
 cmake_minimum_required(VERSION 3.14)
 project(spatial_implementation)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 
 include(FetchContent)
 FetchContent_Declare(
@@ -19,6 +19,13 @@ FetchContent_MakeAvailable(
 
 enable_testing()
 
+set(Boost_USE_STATIC_LIBS ON)
+set(Boost_USE_MULTITHREADED ON)
+set(Boost_USE_STATIC_RUNTIME OFF)
+find_package(Boost 1.45.0 COMPONENTS geometry) 
+
+include_directories(${Boost_INCLUDE_DIRS})
+
 add_executable(
   quad_test
   quad_test.cpp
@@ -27,6 +34,7 @@ add_executable(
 target_link_libraries(
   quad_test
   gtest_main
+  ${Boost_LIBRARIES}
 )
 
 include(GoogleTest)
