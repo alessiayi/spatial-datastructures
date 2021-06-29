@@ -1,26 +1,47 @@
-cmake_minimum_required(VERSION 2.8)
+# https://google.github.io/googletest/quickstart-cmake.html
+
+cmake_minimum_required(VERSION 3.14)
 project(spatial_implementation)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 
-if (NOT TARGET gtest_main)
-    add_subdirectory(googletest)
-endif ()
+include(FetchContent)
+FetchContent_Declare(
+  googletest
+  URL https://github.com/google/googletest/archive/609281088cfefc76f9d0ce82e1ff6c30cc3591e5.zip
+)
 
-include_directories(${gtest_SOURCE_DIR}/include ${gmock_SOURCE_DIR}/include)
+# For Windows: Prevent overriding the parent project's compiler/linker settings
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
-# enable_testing()
+FetchContent_MakeAvailable(
+  googletest)
+
+enable_testing()
+
+
+if(APPLE)
+    set(Boost_USE_STATIC_LIBS ON)
+    set(Boost_USE_MULTITHREADED ON)
+    set(Boost_USE_STATIC_RUNTIME OFF)
+    find_package(Boost 1.45.0 COMPONENTS geometry) 
+
+    include_directories(${Boost_INCLUDE_DIRS})
+endif()
 
 add_executable(
   quad_test
   quad_test.cpp
 )
 
-target_include_directories(quad_test "/usr/local/include")
-
 target_link_libraries(
   quad_test
   gtest_main
-  gtest
-  gmock
 )
+
+if (APPLE)
+    target_link_libraries(quad_test ${Boost_LIBRARIES})
+endif()
+
+include(GoogleTest)
+gtest_discover_tests(quad_test)
