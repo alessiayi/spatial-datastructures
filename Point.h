@@ -22,7 +22,7 @@ public:
     bool operator==(const Point<DataType, DIM>& p) const;
     distance_t distance(const Point<DataType, DIM>& p) const;
 
-    DataType get(std::size_t pos){
+    DataType get(std::size_t pos) const{
         return _values.at(pos);
     }
 

@@ -80,7 +80,7 @@ struct indexable<boost::shared_ptr<Box>>{
 };
 }}} //boost::geometry::index
 
-typedef bg::model::d2::point_xy<double> point;
+typedef bg::model::point<double, 2, bg::cs::cartesian> point;
 typedef boost::shared_ptr<point> value;
 typedef bg::model::box<point> box;
 
@@ -97,9 +97,15 @@ TEST_P(QuadTreeParamTest, randomRangeTest) {
   const std::size_t num_points = GetParam();
   const std::size_t min=0, max=1000;
 
-  std::vector<point_t> points;
+  auto cmp = [](point_t a, point_t b) {
+    const int x=0, y=1;
+    return (a.get(x) < b.get(x)) || ((a.get(x) == b.get(x)) && (a.get(y) < b.get(y)));
+  };
+
+  std::set<point_t, decltype(cmp)> points(cmp);
+
   for(std::size_t I=0;I<num_points;I++)
-    points.push_back(point_t({genRandomNumber<int>(min, max), genRandomNumber<int>(min, max)}));
+    points.insert(point_t({genRandomNumber<int>(min, max), genRandomNumber<int>(min, max)}));
 
   for(auto& p : points){
     tree.insert(p);
