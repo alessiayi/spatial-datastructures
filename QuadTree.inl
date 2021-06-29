@@ -54,37 +54,33 @@ std::shared_ptr<Node> QuadTree<Node, Rectangle, Point>::search(Point target){
 template<typename Node, typename Rectangle, typename Point>
 std::vector<Point> QuadTree<Node, Rectangle, Point>::range(Rectangle region){
     std::vector<Point> result;
-    return range(region, result, this->root);
+    range(region, result, this->root);
+    return result;
 }
 
 template<typename Node, typename Rectangle, typename Point>
 bool QuadTree<Node, Rectangle, Point>::inbound(Rectangle region, Point p){
   const int x=0, y=1;
-  if (p.get(x) < region._max.get(x) && p.get(x) > region._min.get(x) && p.get(y) < region._max.get(y) && p.get(y) > region._min.get(y)){
+  if (p.get(x) <= region._max.get(x) && p.get(x) >= region._min.get(x) && p.get(y) <= region._max.get(y) && p.get(y) >= region._min.get(y)){
     return true;
   }
   return false;
 }
 
 template<typename Node, typename Rectangle, typename Point>
-std::vector<Point> QuadTree<Node, Rectangle, Point>::range(Rectangle region, std::vector<Point>& result, std::shared_ptr<Node>& node){
+void QuadTree<Node, Rectangle, Point>::range(Rectangle region, std::vector<Point>& result, std::shared_ptr<Node>& node){
+    if (node==nullptr){
+      return;
+    }
     auto p = node->get_point();
-    //if (inbound(region, p)){
+    if (inbound(region, p)){
       result.push_back(p);
-    //}
-    if (node->NW() != nullptr){
-      return range(region, result, node->NW());
     }
-    if (node->SW() != nullptr){
-      return range(region, result, node->SW());
-    }
-    if (node->NE() != nullptr){
-      return range(region, result, node->NE());
-    }
-    if (node->SE() != nullptr){
-      return range(region, result, node->SE());
-    }
-    return result;
+    range(region, result, node->NW());
+    range(region, result, node->SW());
+    range(region, result, node->NE());
+    range(region, result, node->SE());
+    return;
 }
 
 template<typename Node, typename Rectangle, typename Point>
