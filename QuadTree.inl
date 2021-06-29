@@ -69,28 +69,19 @@ bool QuadTree<Node, Rectangle, Point>::inbound(Rectangle region, Point p){
 template<typename Node, typename Rectangle, typename Point>
 std::vector<Point> QuadTree<Node, Rectangle, Point>::range(Rectangle region, std::vector<Point> result, std::shared_ptr<Node>& node){
     auto p = node->get_point();
+    if (inbound(region, p)){
+      result.push_back(p);
+    }
     if (node->NW() != nullptr){
-      if (inbound(region, p)){
-        result.push_back(p);
-      }
       return range(region, result, node->NW());
     }
     if (node->SW() != nullptr){
-      if (inbound(region, p)){
-        result.push_back(p);
-      }
       return range(region, result, node->SW());
     }
     if (node->NE() != nullptr){
-      if (inbound(region, p)){
-        result.push_back(p);
-      }
       return range(region, result, node->NE());
     }
     if (node->SE() != nullptr){
-      if (inbound(region, p)){
-        result.push_back(p);
-      }
       return range(region, result, node->SE());
     }
     return result;
